@@ -1,15 +1,23 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/Wyden13/job-aggregator/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+
+	_ "github.com/lib/pq"
 )
+
+type apiConfig struct {
+	DB *db.Queries
+}
 
 // initialize go module :go mod init github.com/yourusername/job-aggregator
 // go mod vendor: create a local copy of external dependencies required to build the project
@@ -23,6 +31,26 @@ func main() {
 	if portString == "" {
 		// portString = "8000"
 		log.Fatal("PORT is not set in environment variables")
+	}
+
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL is not set in environment variables")
+	}
+
+	// Connect to the database using the provided URL
+	conn, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatal("Failed to connect to database: %v", err)
+	}
+
+	queries, err := db.New(conn)
+	if err != nil {
+		log.Fatal("Failed to create database queries: %v", err)
+	}
+
+	apiCfg := apiConfig{
+		DB: queries,
 	}
 	// Create a new router using chi
 	router := chi.NewRouter()
