@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Wyden13/job-aggregator/db"
+	"github.com/Wyden13/rssagg/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
@@ -44,13 +44,13 @@ func main() {
 		log.Fatal("Failed to connect to database: %v", err)
 	}
 
-	queries, err := db.New(conn)
-	if err != nil {
-		log.Fatal("Failed to create database queries: %v", err)
-	}
+	// queries, err := db.New(conn)
+	// if err != nil {
+	// 	log.Fatal("Failed to create database queries: %v", err)
+	// }
 
 	apiCfg := apiConfig{
-		DB: queries,
+		DB: db.New(conn),
 	}
 	// Create a new router using chi
 	router := chi.NewRouter()
@@ -70,7 +70,8 @@ func main() {
 
 	v1Router.Get("/ready", readinessHandler)
 	v1Router.Get("/error", errorHandler)
-
+	v1Router.Post("/users", apiCfg.createUserHandler)
+	v1Router.Get("/users", apiCfg.authMiddleware(apiCfg.handlerGetUser))
 	// v1Router.HandleFunc("/ready", handlerReadiness) --- IGNORE ---
 	// v1Router.HandleFunc("/error", errorHandler) --- IGNORE ---
 
@@ -86,7 +87,7 @@ func main() {
 	// Stop running right here, if there is an error while starting the server,
 	// srv.ListenAndServe() will return an error, and we log it and exit the program using log.Fatal()
 	log.Printf("Starting server on port: %s\n", portString)
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 
 	if err != nil {
 		log.Fatal(err)
