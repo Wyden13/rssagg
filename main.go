@@ -72,6 +72,8 @@ func main() {
 	v1Router.Get("/error", errorHandler)
 	v1Router.Post("/users", apiCfg.createUserHandler)
 	v1Router.Get("/users", apiCfg.authMiddleware(apiCfg.handlerGetUser))
+	v1Router.Post("/feeds", apiCfg.authMiddleware(apiCfg.createFeedHandler))
+	v1Router.Get("/feeds", apiCfg.getFeedsHandler)
 	// v1Router.HandleFunc("/ready", handlerReadiness) --- IGNORE ---
 	// v1Router.HandleFunc("/error", errorHandler) --- IGNORE ---
 

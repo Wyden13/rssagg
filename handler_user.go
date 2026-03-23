@@ -16,8 +16,6 @@ import (
 func (apiCfg *apiConfig) createUserHandler(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Username string `json:"name"`
-		// CreatedAt time.Time `json:"created_at"`
-		// UpdatedAt time.Time `json:"updated_at"`
 	}
 	// Parse the JSON request into the parameters struct
 	decoder := json.NewDecoder(r.Body)
@@ -28,6 +26,20 @@ func (apiCfg *apiConfig) createUserHandler(w http.ResponseWriter, r *http.Reques
 		respondWithError(w, http.StatusBadRequest, fmt.Sprintf("Failed to decode request body: %v", err))
 		return
 	}
+
+	// {Migrate to auth middleware handler}
+	// apiKey, err := auth.GetAPIKey(r.Header)
+	// if err != nil {
+	// 	respondWithError(w, http.StatusUnauthorized, fmt.Sprintf("Failed to get API key: %v", err))
+	// 	return
+	// }
+	// user, err := apiCfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	// if err != nil {
+	// 	respondWithError(w, http.StatusConflict, fmt.Sprintf("User with API key already exists: %v", user.Username))
+	// 	return
+	// }
+	// handler(w, r, user)
+
 	user, err := apiCfg.DB.CreateUser(r.Context(), db.CreateUserParams{
 		ID:        uuid.New(),
 		Username:  params.Username,
