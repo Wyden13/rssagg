@@ -74,6 +74,9 @@ func main() {
 	v1Router.Get("/users", apiCfg.authMiddleware(apiCfg.handlerGetUser))
 	v1Router.Post("/feeds", apiCfg.authMiddleware(apiCfg.createFeedHandler))
 	v1Router.Get("/feeds", apiCfg.getFeedsHandler)
+
+	v1Router.Post("/feed_follows", apiCfg.authMiddleware(apiCfg.createFeedFollowHandler))
+	v1Router.Get("/feed_follows", apiCfg.authMiddleware(apiCfg.getFeedFollowsHandler))
 	// v1Router.HandleFunc("/ready", handlerReadiness) --- IGNORE ---
 	// v1Router.HandleFunc("/error", errorHandler) --- IGNORE ---
 
@@ -94,6 +97,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	fmt.Printf("Server will run on port: %s\n", portString)
 }

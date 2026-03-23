@@ -36,16 +36,17 @@ func (apiCfg *apiConfig) createFeedHandler(w http.ResponseWriter, r *http.Reques
 		Url:       params.URL,
 		UserID:    user.ID,
 	})
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, fmt.Sprint("failed to create new feed: %v", err))
+	}
 	respondWithJSON(w, http.StatusOK, databaseFeedToAPIFeed(feed))
 }
 
-// GetFeedsHandler is a function
 func (apiCfg *apiConfig) getFeedsHandler(w http.ResponseWriter, r *http.Request) {
 	feeds, err := apiCfg.DB.GetFeeds(r.Context())
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, fmt.Sprint("failed to get feeds: %v ", err))
 		return
 	}
-
 	respondWithJSON(w, http.StatusOK, databaseFeedsToAPIFeeds(feeds))
 }
