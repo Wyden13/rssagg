@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Wyden13/rssagg/db"
 	"github.com/go-chi/chi/v5"
@@ -52,9 +53,13 @@ func main() {
 	// 	log.Fatal("Failed to create database queries: %v", err)
 	// }
 
+	db := db.New(conn)
 	apiCfg := apiConfig{
-		DB: db.New(conn),
+		DB: db,
 	}
+
+	go startScraping(db, 10, time.Minute)
+
 	// Create a new router using chi
 	router := chi.NewRouter()
 

@@ -24,8 +24,9 @@ func startScraping(
 	// time.Ticker has a channel called "C", the ticker sends the current time onto that channel every time the interval elapses
 	//
 	for ; ; <-ticker.C {
-		feeds, err := db.GetNextFeedToFetch(
+		feeds, err := db.GetNextFeedsToFetch(
 			context.Background(),
+			int32(concurrency),
 		)
 		if err != nil {
 			log.Printf("Error fetching feeds to scrape: %v", err)
@@ -37,7 +38,7 @@ func startScraping(
 		// For example:
 		for _, feed := range feeds {
 			wg.Add(1)
-			go scrapeFeed(wg, feed)
+			go scrapeFeed(db, wg, feed)
 		}
 		wg.Wait()
 	}
@@ -58,7 +59,7 @@ func scrapeFeed(db *db.Queries, wg *sync.WaitGroup, feed db.Feed) {
 		return
 	}
 	for _, item := range rssFeed.Channel.Items {
-		log.Print("Found post:", item.Title)
+		log.Printf("Found post: %v on feed: %v", item.Title, feed.Name)
 	}
 	log.Printf("Fetched feed %v with %v items", feed.Name, len(rssFeed.Channel.Items))
 }
