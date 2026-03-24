@@ -23,7 +23,7 @@ type apiConfig struct {
 // initialize go module :go mod init github.com/yourusername/job-aggregator
 // go mod vendor: create a local copy of external dependencies required to build the project
 func main() {
-	// feed, err := urlToFeed("https://lilianweng.github.io/index.xml")
+	// feed, err := urlToFeed("https://www.wagslane.dev/index.xml")
 	// if err != nil {
 	// 	log.Fatal("Failed to fetch and parse RSS feed: %v", err)
 	// }
