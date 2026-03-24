@@ -22,14 +22,17 @@ type apiConfig struct {
 // initialize go module :go mod init github.com/yourusername/job-aggregator
 // go mod vendor: create a local copy of external dependencies required to build the project
 func main() {
-	fmt.Println("Hello, World!")
+	// feed, err := urlToFeed("https://lilianweng.github.io/index.xml")
+	// if err != nil {
+	// 	log.Fatal("Failed to fetch and parse RSS feed: %v", err)
+	// }
+	// fmt.Printf("Fetched feed: %+v\n", feed)
 
 	// Load environment variables from .env file
 	godotenv.Load()
 
 	portString := os.Getenv("PORT")
 	if portString == "" {
-		// portString = "8000"
 		log.Fatal("PORT is not set in environment variables")
 	}
 
