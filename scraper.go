@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
@@ -82,6 +83,10 @@ func scrapeFeed(queries *db.Queries, wg *sync.WaitGroup, feed db.Feed) {
 				FeedID:      feed.ID,
 			})
 		if err != nil {
+			if strings.Contains(err.Error(), "duplicate key") {
+				// This means we've already seen this post before, so we can just skip it and continue with the next one
+				continue
+			}
 			log.Printf("Error creating post: %v", err)
 			continue
 		}
