@@ -85,8 +85,8 @@ func main() {
 
 	v1Router.Post("/feed_follows", apiCfg.authMiddleware(apiCfg.createFeedFollowHandler))
 	v1Router.Get("/feed_follows", apiCfg.authMiddleware(apiCfg.getFeedFollowsHandler))
-	// v1Router.HandleFunc("/ready", handlerReadiness) --- IGNORE ---
-	// v1Router.HandleFunc("/error", errorHandler) --- IGNORE ---
+
+	v1Router.Get("/posts", apiCfg.authMiddleware(apiCfg.getPostsForUserHandler))
 
 	router.Mount("/v1", v1Router)
 

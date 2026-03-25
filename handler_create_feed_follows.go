@@ -12,7 +12,6 @@ import (
 
 func (apiCfg *apiConfig) createFeedFollowHandler(w http.ResponseWriter, r *http.Request, user db.User) {
 	type parameters struct {
-		// UserID string `json:"user_id"`
 		FeedID uuid.UUID `json:"feed_id"`
 	}
 	decoder := json.NewDecoder(r.Body)
